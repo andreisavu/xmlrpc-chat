@@ -52,9 +52,11 @@ class UI(object):
 			count += 1
 
 	def put_message(self, msg):
+		y, x = curses.getsyx()
 		self._erase_messages()
 		self.messages.insert(0, msg)
 		self._draw_messages()
+		self.scr.move(y,x)
 		self.scr.refresh()
 
 	def close(self):
@@ -115,22 +117,25 @@ if __name__ == '__main__':
 	fetcher.start()
 
 	while True:
-		msg = ui.get_message()
-		if msg.strip() == '':
-			continue
+		try:
+			msg = ui.get_message()
+			if msg.strip() == '':
+				continue
 
-		if msg == '/quit':
-			break
+			if msg == '/quit':
+				break
 
-		if msg == '/list':
-			ui.put_message('Users: %s' % ','.join(s.get_users(id)))
-			continue
+			if msg == '/list':
+				ui.put_message('Users: %s' % ','.join(s.get_users(id)))
+				continue
 
-		if msg == '/help':
-			ui.put_message('Commands: /help /list /quit')
-			continue
+			if msg == '/help':
+				ui.put_message('Commands: /help /list /quit')
+				continue
 
-		s.post_message(id, msg)
+			s.post_message(id, msg)
+		except KeyboardInterrupt, e:
+			break 
 
 	fetcher.close()
 	fetcher.join()
