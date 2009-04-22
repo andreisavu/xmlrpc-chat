@@ -23,8 +23,9 @@ class UI(object):
 	def txt(self,y,x,msg):
 		try:
 			self.scr.addstr(y,x,msg)
+			return True
 		except curses.error:
-			pass
+			return False
 
 	def __init__(self, name):
 		self._init_curses()
@@ -42,13 +43,15 @@ class UI(object):
 	def _erase_messages(self):
 		count = 1
 		for m in self.messages:
-			self.txt(count, 0, ' ' * len(m))
+			if not self.txt(count, 0, ' ' * len(m)):
+				break
 			count += 1
 
 	def _draw_messages(self):
 		count = 1
 		for m in self.messages:
-			self.txt(count, 0, m)
+			if not self.txt(count, 0, m):
+				break
 			count += 1
 
 	def put_message(self, msg):
