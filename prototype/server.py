@@ -16,7 +16,7 @@ sessions = {
 }
 
 messages = [ {'id': 0,
-	'name': 'Admin',
+	'name': 'Server',
 	'msg': 'Welcome to chat server'}
 ]
 
