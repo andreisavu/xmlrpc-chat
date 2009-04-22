@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="graph-studio" basedir=".">
+	<description>
+	xmlrpc chat server
+	</description>
+
+	<property name="src" value="src" />
+	<property name="test" value="test" />
+	<property name="doc" value="doc" />
+	<property name="build" value="build" />
+	<property name="dist" value="dist" />
+	<property name="conf" value="conf" />
+
+	<path id="project.classpath">
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${src}" />
+		<pathelement location="${test}" />
+        <pathelement location="${build}" />
+	</path>
+
+	<target name="init">
+		<echo>Creating the needed folder structure</echo>
+		<mkdir dir="${build}" />
+		<mkdir dir="${dist}" />
+		<mkdir dir="${doc}" />
+	</target>
+
+	<target name="run" depends="build">
+		<echo>Runnig the application</echo>
+		<copy file="${conf}/server.properties" tofile="${build}/server.properties" />
+		<java classname="server.ApplicationStarter" fork="true" dir="${build}">
+			<classpath refid="project.classpath" />
+		</java>
+	</target>
+
+	<target name="dist" depends="clean, build">
+		<echo>Building the application package</echo>
+		<jar jarfile="${dist}/server.jar" basedir="${build}">
+			<manifest>
+				<attribute name="Main-Class" value="server.ApplicationStarter" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="build" depends="init">
+		<echo>Compiling application code</echo>
+		<javac destdir="${build}" srcdir="${src}">
+			<classpath refid="project.classpath" />
+		</javac>
+	</target>
+
+	<target name="build-debug" depends="init">
+		<echo>Compiling application code - Debug mode</echo>
+		<javac destdir="${build}" srcdir="${src}" debug="on" debuglevel="source">
+			<classpath refid="project.classpath" />
+		</javac>
+	</target>
+
+	<target name="doc">
+		<echo>Extract javadoc from source code</echo>
+		<javadoc destdir="${doc}">
+			<fileset dir="${src}">
+				<include name="**/*.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<target name="test" depends="clean, build-debug">
+		<echo>Running automatic unitesting</echo>
+		<javac destdir="${build}" srcdir="${test}" debug="on" debuglevel="source">
+			<classpath refid="project.classpath" />
+		</javac>
+		<junit dir="${build}" printsummary="off" fork="yes">
+			<classpath refid="project.classpath" />
+			<formatter type="plain" usefile="false" />
+			<batchtest>
+				<fileset dir="${test}">
+					<include name="**/*Test.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+	<target name="clean">
+		<echo>Cleanup generated files</echo>
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+		<delete dir="${doc}" />
+	</target>
+
+</project>
