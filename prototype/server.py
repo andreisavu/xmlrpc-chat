@@ -70,11 +70,12 @@ def post_message(id, msg):
 	sessions['ids'][id]['last_seen'] = time.time()
 	name = sessions['ids'][id]['name']
 
+	global messages
 	messages.append({'id': get_message_id(),
 		'name': name,
 		'msg': msg})
-	#if len(messages) > 3:
-	#	messages = messages[:-3]
+	if len(messages) > 50:
+		messages = messages[-50:]
 	return True
 
 def get_messages(id, last_id):
