@@ -45,10 +45,11 @@ def start_session(name):
 	return id
 
 def end_session(id):
-	name = sessions['ids'][id]['name']
-	del(sessions['ids'][id])
-	del(sessions['names'][name])
-	admin_message("%s has left" % name)
+	if id in sessions['ids']:
+		name = sessions['ids'][id]['name']
+		del(sessions['ids'][id])
+		del(sessions['names'][name])
+		admin_message("%s has left" % name)
 	return True
 
 _counter = 1
@@ -72,6 +73,8 @@ def post_message(id, msg):
 	messages.append({'id': get_message_id(),
 		'name': name,
 		'msg': msg})
+	#if len(messages) > 3:
+	#	messages = messages[:-3]
 	return True
 
 def get_messages(id, last_id):

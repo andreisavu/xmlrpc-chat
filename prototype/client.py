@@ -11,6 +11,7 @@ import sys
 import curses
 import threading
 import time
+import socket
 
 class UI(object):
 
@@ -77,7 +78,12 @@ class Fetcher(threading.Thread):
 	def run(self):
 		last_message_id = -1
 		while self.active:
-			msgs = self.server.get_messages(self.id, last_message_id+1)
+			try:
+				msgs = self.server.get_messages(self.id, last_message_id+1)
+			except socket.error, e:
+				ui.put_message('Error: Unable to connect to server. Will retry in 5 seconds.')
+				msgs = []
+				time.sleep(5)
 
 			for m in msgs:
 				if m['id'] > last_message_id:
@@ -112,7 +118,11 @@ def server_connect(url, name):
 
 if __name__ == '__main__':
 	url, name = parse_cli_params()
-	s, id  = server_connect(url, name)
+	try:
+		s, id  = server_connect(url, name)
+	except socket.error, e:
+		print 'Unable to connect to server', url, 'as', name
+		sys.exit(1)
 
 	ui = UI(name)
 
@@ -136,7 +146,8 @@ if __name__ == '__main__':
 				ui.put_message('Commands: /help /list /quit')
 				continue
 
-			s.post_message(id, msg)
+			if not s.post_message(id, msg):
+				ui.put_message('Error: Message send failed. Please reconnect')
 		except KeyboardInterrupt, e:
 			break 
 
