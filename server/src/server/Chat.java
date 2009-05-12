@@ -24,6 +24,5 @@ public class Chat {
 		}
 		return storage.getUsers();
 	}
-
 }
 

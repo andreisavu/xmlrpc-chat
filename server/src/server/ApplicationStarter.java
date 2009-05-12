@@ -1,3 +1,8 @@
+/**
+ * Chat Server Entry Point Class
+ *
+ *
+ */
 
 package server;
 

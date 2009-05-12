@@ -19,11 +19,19 @@ public class Storage {
 		return instance;
 	}
 
-	private int generateMessageId() {
-		return 0;
+
+	private int sessionIdCounter = 0;
+	private int messageIdCounter = 0;
+
+	private List<Message> messages = new LinkedList<Message>();
+	private Map<Integer, String> sessions = new HashMap<Integer, String>();
+
+	private synchronized int generateMessageId() {
+		return ++messageIdCounter;
 	}
 
-	public Storage() {
+	private synchronized int generateSessionId() {
+		return ++sessionIdCounter;
 	}
 
 	public boolean putMessage(int id, String msg) {
@@ -31,15 +39,21 @@ public class Storage {
 	}
 
 	public List<Message> getMessages() {
-		return getMessages(0);
+		return messages;
 	}
 
 	public List<Message> getMessages(int minId) {
-		return new LinkedList<Message>();
+		List<Message> ret = new LinkedList<Message>();
+		for(Message m : messages) {
+			if(m.getId() >= minId) {
+				ret.add(m);
+			}
+		}
+		return ret;
 	}
 
 	public int startSession(String name) {
-		return 0;
+		return generateSessionId();
 	}
 
 	public boolean endSession(int id) {

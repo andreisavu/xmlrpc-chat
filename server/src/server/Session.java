@@ -3,12 +3,14 @@ package server;
 
 public class Session {
 
+	private Storage storage = Storage.getInstance();
+
 	public int start(String nick) {
-		return 1;
+		return storage.startSession(nick); 
 	}
 
 	public boolean end(int id) {
-		return true;
+		return storage.endSession(id);
 	}
 
 }
