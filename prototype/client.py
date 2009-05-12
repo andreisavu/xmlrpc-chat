@@ -79,7 +79,7 @@ class Fetcher(threading.Thread):
 		last_message_id = -1
 		while self.active:
 			try:
-				msgs = self.server.get_messages(self.id, last_message_id+1)
+				msgs = self.server.Chat.get(self.id, last_message_id+1)
 			except socket.error, e:
 				ui.put_message('Error: Unable to connect to server. Will retry in 5 seconds.')
 				msgs = []
@@ -108,7 +108,7 @@ def parse_cli_params():
 
 def server_connect(url, name):
 	s = rpc.ServerProxy(url)
-	id = s.start_session(name)
+	id = s.Session.start(name)
 
 	if not id:
 		print 'Name in use, chose another.'
@@ -139,20 +139,20 @@ if __name__ == '__main__':
 				break
 
 			if msg == '/list':
-				ui.put_message('Users: %s' % ','.join(s.get_users(id)))
+				ui.put_message('Users: %s' % ','.join(s.Chat.getUsers(id)))
 				continue
 
 			if msg == '/help':
 				ui.put_message('Commands: /help /list /quit')
 				continue
 
-			if not s.post_message(id, msg):
+			if not s.Chat.post(id, msg):
 				ui.put_message('Error: Message send failed. Please reconnect')
 		except KeyboardInterrupt, e:
 			break 
 
 	fetcher.close()
 	fetcher.join()
-	s.end_session(id)
+	s.Session.end(id)
 	ui.close()
 

@@ -100,22 +100,6 @@ if __name__ == '__main__':
 	server = SimpleXMLRPCServer(('', port))
 	server.register_introspection_functions()
 
-	#
-	# Register api functions for the python test client
-	#
-
-	server.register_function(start_session)
-	server.register_function(end_session)
-
-	server.register_function(post_message)
-	server.register_function(get_messages)
-
-	server.register_function(get_users)
-
-	#
-	# Register api functions for the java client
-	#
-
 	server.register_function(start_session, 'Session.start')
 	server.register_function(end_session, 'Session.end')
 
