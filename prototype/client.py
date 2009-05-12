@@ -79,7 +79,7 @@ class Fetcher(threading.Thread):
 		last_message_id = -1
 		while self.active:
 			try:
-				msgs = self.server.Chat.get(self.id, last_message_id+1)
+				msgs = self.server.Chat.get(self.id, int(last_message_id)+1)
 			except socket.error, e:
 				ui.put_message('Error: Unable to connect to server. Will retry in 5 seconds.')
 				msgs = []

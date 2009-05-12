@@ -1,7 +1,7 @@
 /**
  * Simple in memory database for chat server
  *
- * Multi-threading safe
+ * Thread safe but not optimal - still experimental
  */
 
 package server;
@@ -34,38 +34,53 @@ public class Storage {
 		return ++sessionIdCounter;
 	}
 
-	public boolean putMessage(int id, String msg) {
-		return false;
+	public synchronized boolean putMessage(int sid, String msg) {
+		if(!validSessionId(sid)) {
+			return false;
+		}
+		int id = generateMessageId();
+		messages.add(new Message(id, sessions.get(sid), msg));
+		return true;
 	}
 
-	public List<Message> getMessages() {
+	public synchronized List<Message> getMessages() {
 		return messages;
 	}
 
-	public List<Message> getMessages(int minId) {
+	public synchronized List<Message> getMessages(int minId) {
 		List<Message> ret = new LinkedList<Message>();
 		for(Message m : messages) {
-			if(m.getId() >= minId) {
+			if(m.getId() > minId) {
 				ret.add(m);
 			}
 		}
 		return ret;
 	}
 
-	public int startSession(String name) {
-		return generateSessionId();
+	public synchronized int startSession(String name) {
+		if(sessions.containsValue(name)) {
+			return 0;
+		}
+		int id = generateSessionId();
+		sessions.put(id, name);
+		return id;
 	}
 
-	public boolean endSession(int id) {
-		return false;
+	public synchronized boolean endSession(int id) {
+		sessions.remove(id);
+		return true;
 	}
 
-	public boolean validSessionId(int id) {
-		return false;
+	public synchronized boolean validSessionId(int id) {
+		return sessions.containsKey(id);
 	}
 
-	public List<String> getUsers() {
-		return new LinkedList<String>();
+	public synchronized List<String> getUsers() {
+		List<String> ret = new LinkedList<String>();
+		for(String name : sessions.values()) {
+			ret.add(name);
+		}
+		return ret;
 	}
 
 }
