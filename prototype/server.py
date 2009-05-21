@@ -15,7 +15,7 @@ sessions = {
 	'ids' : {}
 }
 
-messages = [ {'id': 0,
+messages = [ {'id': '0',
 	'name': 'Server',
 	'msg': 'Welcome to chat server'}
 ]
@@ -59,7 +59,7 @@ def get_message_id():
 	return _counter 
 
 def admin_message(msg):
-	messages.append({'id': get_message_id(),
+	messages.append({'id': str(get_message_id()),
 		'name': 'Server',
 		'msg': msg})
 
@@ -71,7 +71,7 @@ def post_message(id, msg):
 	name = sessions['ids'][id]['name']
 
 	global messages
-	messages.append({'id': get_message_id(),
+	messages.append({'id': str(get_message_id()),
 		'name': name,
 		'msg': msg})
 	if len(messages) > 50:
@@ -82,7 +82,7 @@ def get_messages(id, last_id):
 	if id not in sessions['ids']:
 		return []
 	sessions['ids'][id]['last_seen'] = time.time()
-	return [m for m in messages if m['id'] >= last_id]
+	return [m for m in messages if int(m['id']) >= last_id]
 
 def get_users(id):
 	if id not in sessions['ids']:

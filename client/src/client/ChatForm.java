@@ -5,6 +5,7 @@
  */
 package client;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import org.jdesktop.application.Action;
 
@@ -120,9 +121,21 @@ private void close(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_close
 	}
 
 	public void setMessages(String[] messages) {
-		uiMessages.setListData(messages);
+		if(model == null) {
+			model = new DefaultListModel();
+			uiMessages.setModel(model);
+		}
+		for(String s : messages) {
+			model.addElement(s);
+		}
+		int lastIndex = uiMessages.getModel().getSize() - 1;
+		if (lastIndex >= 0) {
+			uiMessages.ensureIndexIsVisible(lastIndex);
+		}
 	}
 
+	private DefaultListModel model = null;
+	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;

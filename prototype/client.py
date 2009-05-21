@@ -86,8 +86,8 @@ class Fetcher(threading.Thread):
 				time.sleep(5)
 
 			for m in msgs:
-				if m['id'] > last_message_id:
-					last_message_id = m['id']
+				if int(m['id']) > last_message_id:
+					last_message_id = int(m['id'])
 				ui.put_message('%s: %s' % (m['name'], m['msg']))
 
 			time.sleep(1)

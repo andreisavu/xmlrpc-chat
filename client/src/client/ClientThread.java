@@ -26,10 +26,10 @@ public class ClientThread extends Thread {
 
 	@Override
 	public void run() {
-		int lastId = 0;
+		int lastId = -1;
 		while (!shouldExit()) {
 			try {
-				setMessages(lastId);
+				lastId = setMessages(lastId);
 				setUsers();
 				Thread.sleep(1000);
 			} catch (InterruptedException ex) {
@@ -44,15 +44,20 @@ public class ClientThread extends Thread {
 		exitFlag = true;
 	}
 
-	private void setMessages(int lastId) throws XmlRpcException {
-		Map<String, String>[] messages = chat.getMessage(lastId);
+	private int setMessages(int lastId) throws XmlRpcException {
+		Map<String, String>[] messages = chat.getMessage(lastId+1);
 
 		String[] lines = new String[messages.length];
-		int count = 0;
+		int count = 0, aux = 0;
 		for (Map<String, String> m : messages) {
 			lines[count++] = m.get("name") + ": " + m.get("msg");
+			aux = Integer.parseInt(m.get("id"));
+			if(aux > lastId) {
+				lastId = aux;
+			}
 		}
 		ui.setMessages(lines);
+		return lastId;
 	}
 
 	private void setUsers() throws XmlRpcException {
