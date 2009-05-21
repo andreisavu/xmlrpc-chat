@@ -50,7 +50,7 @@ public class Storage {
 	public synchronized List<Message> getMessages(int minId) {
 		List<Message> ret = new LinkedList<Message>();
 		for(Message m : messages) {
-			if(m.getId() > minId) {
+			if(m.getId() >= minId) {
 				ret.add(m);
 			}
 		}
