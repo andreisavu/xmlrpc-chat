@@ -56,6 +56,7 @@ public class ChatForm extends javax.swing.JFrame {
         jScrollPane3.setName("jScrollPane3"); // NOI18N
 
         uiMessage.setColumns(20);
+        uiMessage.setFont(resourceMap.getFont("uiMessage.font")); // NOI18N
         uiMessage.setRows(2);
         uiMessage.setName("uiMessage"); // NOI18N
         jScrollPane3.setViewportView(uiMessage);
@@ -109,8 +110,10 @@ private void close(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_close
 	@Action
 	public void sendMessage() {
 		try {
-			ChatApplication.getApplication().sendMessage(uiMessage.getText());
-			uiMessage.setText("");
+            if(!uiMessage.getText().equals("")) {
+                ChatApplication.getApplication().sendMessage(uiMessage.getText());
+                uiMessage.setText("");
+            }
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, ex.getMessage());
 		}
