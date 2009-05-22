@@ -96,9 +96,12 @@
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="font" type="java.awt.Font" resourceKey="uiMessage.font"/>
-            <Property name="rows" type="int" value="2"/>
+            <Property name="rows" type="int" value="1"/>
             <Property name="name" type="java.lang.String" value="uiMessage" noResource="true"/>
           </Properties>
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="uiMessageKeyReleased"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

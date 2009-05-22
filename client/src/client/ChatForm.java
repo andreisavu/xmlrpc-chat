@@ -57,8 +57,13 @@ public class ChatForm extends javax.swing.JFrame {
 
         uiMessage.setColumns(20);
         uiMessage.setFont(resourceMap.getFont("uiMessage.font")); // NOI18N
-        uiMessage.setRows(2);
+        uiMessage.setRows(1);
         uiMessage.setName("uiMessage"); // NOI18N
+        uiMessage.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                uiMessageKeyReleased(evt);
+            }
+        });
         jScrollPane3.setViewportView(uiMessage);
 
         javax.swing.ActionMap actionMap = org.jdesktop.application.Application.getInstance(client.ChatApplication.class).getContext().getActionMap(ChatForm.class, this);
@@ -107,12 +112,19 @@ private void close(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_close
 	ChatApplication.getApplication().close();
 }//GEN-LAST:event_close
 
+private void uiMessageKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_uiMessageKeyReleased
+    if(evt.getKeyChar() == '\n') {
+        uiSend.doClick();
+    }
+}//GEN-LAST:event_uiMessageKeyReleased
+
 	@Action
 	public void sendMessage() {
 		try {
             if(!uiMessage.getText().equals("")) {
-                ChatApplication.getApplication().sendMessage(uiMessage.getText());
+                ChatApplication.getApplication().sendMessage(uiMessage.getText().trim());
                 uiMessage.setText("");
+                uiMessage.requestFocusInWindow();
             }
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, ex.getMessage());
