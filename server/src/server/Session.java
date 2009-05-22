@@ -10,7 +10,7 @@ public class Session {
 
 	public int start(String nick) {
 		log.info("Starting new session for " + nick);
-		return storage.startSession(nick); 
+        return storage.startSession(nick);
 	}
 
 	public boolean end(int id) {

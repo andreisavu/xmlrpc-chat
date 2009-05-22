@@ -20,11 +20,15 @@ public class Storage {
 	}
 
 
-	private int sessionIdCounter = 0;
+	private int sessionIdCounter = 1;
 	private int messageIdCounter = 0;
 
 	private List<Message> messages = new LinkedList<Message>();
 	private Map<Integer, String> sessions = new HashMap<Integer, String>();
+
+    public Storage() {
+        sessions.put(1, "Server");
+    }
 
 	private synchronized int generateMessageId() {
 		return ++messageIdCounter;
@@ -63,10 +67,12 @@ public class Storage {
 		}
 		int id = generateSessionId();
 		sessions.put(id, name);
+        putMessage(1, name + " entered the chat room.");
 		return id;
 	}
 
 	public synchronized boolean endSession(int id) {
+        putMessage(1, sessions.get(id) + " left the chat room.");
 		sessions.remove(id);
 		return true;
 	}
