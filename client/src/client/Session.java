@@ -22,18 +22,18 @@ public class Session {
 		client = rpcClient;
 	}
 
-	public int start(String name) {
+	public int start(String name) throws XmlRpcException {
 		Object[] params = new Object[]{name};
 		try {
 			id = (Integer) client.execute("Session.start", params);
 		} catch (XmlRpcException ex) {
 			log.severe(ex.getMessage());
-			id = 0;
+			throw ex;
 		}
 		return id;
 	}
 
-	public boolean end() {
+	public boolean end()  {
 		Object[] params = new Object[]{id};
 		boolean ret;
 		try {
@@ -43,7 +43,7 @@ public class Session {
 			}
 		} catch (XmlRpcException ex) {
 			log.severe(ex.getMessage());
-			ret = false;
+			return false;
 		}
 		return ret;
 	}
